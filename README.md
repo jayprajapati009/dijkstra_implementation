@@ -17,7 +17,14 @@
 |Queue|Default|
 |OpenCV|4.7.0|
 
-## Code
+## Links
+
+|Item|Link|
+|---|:---:|
+|Github Repository|[here](https://github.com/jayprajapati009/dijkstra_implementation.git)|
+|Videos|[here](https://drive.google.com/drive/folders/1J2TJXaEZ-cXNX1wpDDdfsEmiZ9z9uXjI?usp=share_link)|
+
+## Run Code
 
 Navigate to the ```proj2_jay_prajapati``` folder after unzipping the folder,
 
