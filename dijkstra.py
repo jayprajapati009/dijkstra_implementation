@@ -557,7 +557,7 @@ def main():
                 start_time = time.time()
 
                 # Run the algorithm
-                node_graph, anim_canvas, animation_array = dijkstra(canvas)
+                node_graph, anim_canvas, animation_array = dijkstra()
 
                 # get the path from initial point to the goal point
                 path = backTrack(node_graph)
