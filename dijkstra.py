@@ -148,7 +148,7 @@ def checkSolvable(x, y):
         y (int): x coordinate
 
     Returns:
-        bool: boolean value to check whether the case is solvable or not 
+        bool: boolean value to check whether the case is solvable or not
     """
     # Initialize the flag
     solvable = True
@@ -472,13 +472,122 @@ def backTrack(node_graph):
     return path
 
 
+def saveAnimation(animation_array):
+    """Generates an Animation and Saves the video
+
+    Args:
+        animation_array (_type_): _description_
+    """
+    print("\n")
+    print("#"*80)
+    print("\nGenerating the video file.")
+    # create the video object
+    video = cv2.VideoWriter(
+        'shortest.mp4', cv2.VideoWriter_fourcc(*'MP4V'), 50, (600, 250))
+
+    # write all the saved frames in the video
+    for i in range(len(animation_array)):
+        frame = animation_array[i]
+        video.write(frame)
+    video.release()
+
+    print("Video file generated succesfully.")
+
+
 def main():
     """main function
     """
+    # declare the global variables
     global canvas_height, canvas_width, initial_cord, final_cord, infinity, canvas
 
+    # canvas frame dimensions
     canvas_height, canvas_width = 250, 600
+
+    # declare the variable for infinity
     infinity = sys.maxsize
+
+    print("#"*80)
+    print("#  Reach the goal (Path Planning using Dijkstra)")
+    print("#"*80)
+
+    # initialize a loop to get input from valid points
+    loop = True
+    while loop:
+        print("\nEnter your choice for mode of operation,")
+        print("\nType 1 for selecting the points manually")
+        print("Type 2 for selecting the points randomly")
+
+        # get the choice from the user for selecting the points manually or default
+        choice = int(input("\nYour Choice: "))
+
+        # get input for manual extry
+        if choice == 1:
+            initial_cord_x = int(
+                input("\nEnter x coordinate of Initial Point: "))
+            initial_cord_y = int(
+                input("Enter y coordinate of Initial Point: "))
+            final_cord_x = int(input("Enter x coordinate of Goal Point: "))
+            final_cord_y = int(input("Enter y coordinate of Goal Point: "))
+
+        # default setup points
+        elif choice == 2:
+            initial_cord_x = 10
+            initial_cord_y = 10
+            final_cord_x = 500
+            final_cord_y = 200
+
+        # error message for the invalid choices
+        else:
+            print("Invalid Choice")
+
+        # display the coordinates
+        print("\nInitial Point = [", initial_cord_x, ", ", initial_cord_y, "]")
+        print("Goal Point = [", final_cord_x, ", ", final_cord_y, "]")
+
+        # check the solvability
+        if checkSolvable(initial_cord_x, initial_cord_y):
+            if checkSolvable(final_cord_x, final_cord_y):
+                initial_cord = [initial_cord_x, initial_cord_y]
+                final_cord = [final_cord_x, final_cord_y]
+
+                # call the canvas
+                canvas = createCanvas()
+
+                # note the start time
+                start_time = time.time()
+
+                # Run the algorithm
+                node_graph, anim_canvas, animation_array = dijkstra(canvas)
+
+                # get the path from initial point to the goal point
+                path = backTrack(node_graph)
+
+                # note the end time
+                end_time = time.time()
+
+                # Display the path
+                for ele in path[::-1]:
+                    cv2.circle(
+                        anim_canvas, (ele[1], ele[0]), 2, (0, 0, 255), -1)
+                    animation_array.append(anim_canvas.copy())
+                    cv2.imshow("Animation", anim_canvas)
+                    cv2.waitKey(1)
+
+                # display the processing time
+                print("\n Goal Reached")
+                print("The output was processed in ",
+                      end_time-start_time, " seconds.\n")
+
+                cv2.imshow("Animation", anim_canvas)
+                cv2.waitKey(0)
+
+                break
+
+            else:
+                print("\nInvalid Inputs.")
+
+    # save the animation video
+    saveAnimation(animation_array)
 
 
 if __name__ == "__main__":
